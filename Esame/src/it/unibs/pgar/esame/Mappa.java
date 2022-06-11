@@ -225,7 +225,9 @@ public class Mappa {
 		return cestaVicina;
 	}
 	
-	
+	public Personaggio getPersonaggio() {
+		return player;
+	}
 	
 	
 	public int getPlayerX() {
