@@ -13,9 +13,7 @@ public class XML {
 	private final static String filename = "livello1.xml";
 	private String tag_riga = "row";
 	private String tag_cella = "cell";
-	private String tag_mappa = "mappa";
-	private String tag_larghezza = "width";
-	private String tag_altezza = "height";		
+	private String tag_mappa = "mappa";		
 	private String[][]mappa;
 	private int riga = 0;
 	private int colonna = 0;

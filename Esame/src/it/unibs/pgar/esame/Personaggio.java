@@ -95,6 +95,9 @@ public class Personaggio implements Entita {
 			int effettoPozione = ((Pozione)oggettoImpugnato).riceviEffettoPozione();
 			vita = Math.min(vitaIniziale, vita + (vita * effettoPozione/100));
 		}
+		else {
+			System.out.println("Devi avere in mano una pozione per usarla!");
+		}
 	}
 	
 	public void impostaOggetto(OggettoCesta oggetto) {
