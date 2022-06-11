@@ -50,7 +50,15 @@ public class Personaggio implements Entita {
 	*/
 	
 	public void impugna() {
-		
+		stampaInventario();
+		String scelta = InputDati.leggiStringaNonVuota("Quale strumento vuoi impugnare?");
+		for (int i = 0; i < inventario.size(); i++) {
+			if(inventario.get(i).getNomeOggetto().equals(scelta)) {
+				oggettoImpugnato = inventario.get(i);
+				return;
+			}
+		}
+		System.out.println("Oggetto non trovato");
 	}
 	
 	public double attacca() {
@@ -71,6 +79,10 @@ public class Personaggio implements Entita {
 		return this.vita>0;
 	}
 	
+	public void mortePersonaggio() {
+		System.out.println("");
+	}
+	
 	public void impostaPosizione(int posX, int posY) {
 		this.posX = posX;
 		this.posY = posY;
@@ -78,6 +90,10 @@ public class Personaggio implements Entita {
 	
 	public void infoOggetti() {
 		
+	}
+	
+	public void impostaOggetto(OggettoCesta oggetto) {
+		oggettoImpugnato = oggetto;
 	}
 	
 	
@@ -139,6 +155,13 @@ public class Personaggio implements Entita {
 
 	public void setPosY(int posY) {
 		this.posY = posY;
+	}
+	
+	public void stampaInventario() {
+		System.out.println("Gli oggetti disponibili sono:");
+		for (int i = 0; i < inventario.size(); i++) {
+			System.out.println(inventario.get(i).getNomeOggetto());
+		}
 	}
 	
 	

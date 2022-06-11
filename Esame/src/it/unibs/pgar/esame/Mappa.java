@@ -17,9 +17,11 @@ public class Mappa {
 	private String [][] mappa;
 	private Personaggio player = creaPersonaggio();
 	private ArrayList<Mostro> mostriMappa = new ArrayList<> ();
+	private ArrayList<Cesta> elencoCeste = new ArrayList<> ();
 	private XML xml;
 	public static int righeMatrice;
 	public static int colonneMatrice;
+	private boolean cestaVicina = false;
 	
 	
 	
@@ -30,7 +32,7 @@ public class Mappa {
 	}
 	
 	// Guardo oltre e poi interegisco (se posso muovermi) altrimenti richiedo movmento
-	/*public void movimentoPersonaggio() {
+	public void movimentoPersonaggio() {
 		char movimento;
 		boolean movimentoNonConsentito = false;
 		do {
@@ -38,21 +40,21 @@ public class Mappa {
 			movimento = InputDati.leggiChar(RICHIESTA_PER_MOVIMENTO);	
 		}while(movimento != 'W' && movimento != 'S' && movimento != 'D' && movimento != 'A');	
 		
-		if (movimento == 'W') {
-			
+		movimentoNonConsentito = guardaOltre(movimento);
+		if(movimentoNonConsentito) {
+			System.out.println("Non puoi muoverti in quella direzione!");
 		}
-		
 		
 		}while(movimentoNonConsentito);
 	}
-	*/
+	
 	
 	
 	private boolean guardaOltre(char movimento) {
 		boolean movimentoImpossibile = false;
-		String posizioneSuccessiva;
-		int newPosX;
-		int newPosY;
+		String posizioneSuccessiva = null;
+		int newPosX = 0;
+		int newPosY = 0;
 		
 		if (movimento == 'W') {
 			 if(player.getPosY() == 0) {
@@ -90,12 +92,16 @@ public class Mappa {
 		
 		if(posizioneSuccessiva.equals("#")) return movimentoImpossibile = true;
 		if(posizioneSuccessiva.equals("M")) {
-			gestisciScontro(newPosX,newPosY);
+			boolean mortePersonaggio = gestisciScontro(newPosX,newPosY);
+			if(mortePersonaggio) {
+				player.mortePersonaggio();
+			}
 			player.impostaPosizione(newPosX,newPosY);
 		}
 		if(posizioneSuccessiva.equals("C")) {
-			aperturaCeste(newPosX,newPosY);
+			cestaVicina = true;
 			player.impostaPosizione(newPosX,newPosY);
+			
 		}
 		if(posizioneSuccessiva.equals("K")) {
 			
@@ -108,9 +114,25 @@ public class Mappa {
 		return movimentoImpossibile;
 	}
 	
-	public void interazionePersonaggio() {
+	
+	public void aperturaCesta(int posX, int posY) {
+		OggettoCesta oggetto = null;
+			for(int i = 0; i < elencoCeste.size(); i++) {
+				if(posX == elencoCeste.get(i).getPosX() && posY == elencoCeste.get(i).getPosY()) {
+					oggetto = elencoCeste.get(i).getContenuto();
+					player.impostaOggetto(oggetto);
+					break;
+			}
+		}
 		
 	}
+	
+	
+	public void dichiaraVittoria() {
+		System.out.println("Complimenti!\n Hai salvato la principessa Kibo");
+		stampaMappa();
+	}
+	
 
 	
 //===========================================Metodi per la costruzione della mappa===========================================	
@@ -149,16 +171,27 @@ public class Mappa {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
 				if(mappa[i][j].equals("M")){
 					String nome = permutaMostro();
-					mostriMappa.add(new Mostro(nome, i, j));
+					mostriMappa.add(new Mostro(nome, j, i));
 				}
 			}
 		}
 	}
 	
-	public void gestisciScontro(int mostroX, int mostroY) {
-		
+	private void creaElencoCeste() {
+		for(int i = 0; i < xml.getRigheMatrice(); i++) {
+			for(int j=0; j < xml.getColonneMatrice(); j++) {
+				if(mappa[i][j].equals("C")){
+					elencoCeste.add(new Cesta( j, i));
+				}
+			}
+		}
+	}
+	
+	public boolean gestisciScontro(int mostroX, int mostroY) {
+		Mostro mostro = null;
+		boolean mortePersonaggio = false;
 		do {
-			Mostro mostro;
+			
 			for(int i = 0; i < mostriMappa.size(); i++) {
 				if(mostroX == mostriMappa.get(i).getPosX() && mostroY == mostriMappa.get(i).getPosY()) {
 					mostro = mostriMappa.get(i);
@@ -171,7 +204,14 @@ public class Mappa {
 			player.subisciDanni(mostro.attacca());
 			
 		}while(player.inVita() && mostro.inVita());
-		
+		if(player.inVita()) {
+			System.out.println("Hai sconfitto il mostro!!");
+		}
+		else {
+			System.out.println("Sei stato sconfitto, ma hai combattuto con onore!");
+			mortePersonaggio = true;
+		}
+		return mortePersonaggio;
 		
 	}
 	
@@ -181,7 +221,23 @@ public class Mappa {
 		return new Personaggio(nome);
 	}
 	
+	public boolean getCestaVicina() {
+		return cestaVicina;
+	}
 	
+	
+	
+	
+	public int getPlayerX() {
+		return player.getPosX();
+	}
+	
+	public int getPlayerY() {
+		return player.getPosY();
+	}
+	
+	
+
 	//Da salvare in libreria
 	public String permutaMostro() {
 		String str = "dijkstra";        
