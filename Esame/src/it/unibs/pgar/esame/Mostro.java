@@ -6,7 +6,7 @@ public class Mostro implements Entita {
 
 	private String nome;
 	private int vitaIniziale;
-	private int vita;
+	private double vita;
 	private int attacco;
 	private int difesa;
 	private double modificatore;
@@ -35,7 +35,7 @@ public class Mostro implements Entita {
 		
 	}
 	
-	public void subisciDanni(int danni) {
+	public void subisciDanni(double danni) {
 		this.vita = Math.max(0,this.vita - danni);
 	}
 	
@@ -62,7 +62,7 @@ public class Mostro implements Entita {
 	}
 
 
-	public int getVita() {
+	public double getVita() {
 		return vita;
 	}
 
@@ -80,5 +80,17 @@ public class Mostro implements Entita {
 		return modificatore;
 	}
 
+
+	public int getPosX() {
+		return posX;
+	}
+
+
+	public int getPosY() {
+		return posY;
+	}
+
+	
+	
 	
 }

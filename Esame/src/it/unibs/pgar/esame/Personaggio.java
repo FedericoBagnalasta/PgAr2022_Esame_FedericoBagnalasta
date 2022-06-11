@@ -2,14 +2,14 @@ package it.unibs.pgar.esame;
 
 import java.util.ArrayList;
 
-import it.unibs.fp.mylib.NumeriCasuali;
+import it.unibs.fp.mylib.*;
 
 public class Personaggio implements Entita {
 	
 	private String nome;
 	private static final int vitaIniziale = 20;
 	private static final int potenzaIniziale = 1;
-	private int vita;
+	private double vita;
 	private int attacco;
 	private int difesa;
 	private int potenza;
@@ -30,11 +30,24 @@ public class Personaggio implements Entita {
 		
 	}
 
-
-	public void muoviti() {
+	//Metodo che ti permette di spos
+/*	public void () {
+		boolean sceltaImpraticabile = false;
+		do {
+		char movimento;
+		do {
+			movimento = InputDati.leggiChar(RICHIESTA_PER_MOVIMENTO);	
+		}while(movimento != 'W' && movimento != 'S' && movimento != 'D' && movimento != 'A');	
 		
+		if (movimento == 'W') {
+			if(posY < Mappa.righeMatrice) posY++;
+			else sceltaImpraticabile = true;
+		}
+		
+		
+		}while (sceltaImpraticabile);
 	}
-	
+	*/
 	
 	public void impugna() {
 		
@@ -50,7 +63,7 @@ public class Personaggio implements Entita {
 		return danno;
 	}
 	
-	public void subisciDanni(int danni) {
+	public void subisciDanni(double danni) {
 		this.vita = Math.max(0,this.vita - danni);
 	}
 	
@@ -83,7 +96,7 @@ public class Personaggio implements Entita {
 	}
 
 
-	public int getVita() {
+	public double getVita() {
 		return vita;
 	}
 
@@ -105,6 +118,22 @@ public class Personaggio implements Entita {
 
 	public double getModificatore() {
 		return modificatore;
+	}
+
+	public int getPosX() {
+		return posX;
+	}
+
+	public void setPosX(int posX) {
+		this.posX = posX;
+	}
+
+	public int getPosY() {
+		return posY;
+	}
+
+	public void setPosY(int posY) {
+		this.posY = posY;
 	}
 	
 	

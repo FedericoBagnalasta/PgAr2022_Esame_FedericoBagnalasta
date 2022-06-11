@@ -71,6 +71,8 @@ public class XML {
 							colonneMatrice = Integer.parseInt(xmlr.getAttributeValue(0));
 							righeMatrice = Integer.parseInt(xmlr.getAttributeValue(1));
 							mappa = new String [righeMatrice][colonneMatrice];
+							Mappa.righeMatrice = righeMatrice;
+							Mappa.colonneMatrice = colonneMatrice;
 							break;
 				     }
 					 

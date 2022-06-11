@@ -10,11 +10,16 @@ public class Mappa {
 	
 	
 
+	
+	private static final String RICHIESTA_PER_MOVIMENTO = "Premi uno tra W, S, D, A, per muoverti rispettivamente"
+			+ "In avanti, In dietro, A destra, A sinistra";
 	private static final String RICHIESTA_NOME = "Come vuoi chiamare il tuo eroe?";
 	private String [][] mappa;
 	private Personaggio player = creaPersonaggio();
 	private ArrayList<Mostro> mostriMappa = new ArrayList<> ();
 	private XML xml;
+	public static int righeMatrice;
+	public static int colonneMatrice;
 	
 	
 	
@@ -24,8 +29,51 @@ public class Mappa {
 		inizializzaMappa();
 	}
 	
+	// Guardo oltre e poi interegisco (se posso muovermi) altrimenti richiedo movmento
+	/*public void movimentoPersonaggio() {
+		char movimento;
+		boolean movimentoNonConsentito = false;
+		do {
+		do {
+			movimento = InputDati.leggiChar(RICHIESTA_PER_MOVIMENTO);	
+		}while(movimento != 'W' && movimento != 'S' && movimento != 'D' && movimento != 'A');	
+		
+		if (movimento == 'W') {
+			
+		}
+		
+		
+		}while(movimentoNonConsentito);
+	}
+	*/
 	
 	
+	private boolean guardaOltre(char movimento) {
+		boolean movimentoImpossibile = false;
+		String posizioneSuccessiva;
+		
+		if (movimento == 'W') {
+			 if(player.getPosY() == 0) {
+				 return movimentoImpossibile = true;
+			 }
+			 posizioneSuccessiva = mappa[player.getPosY() - 1][player.getPosX()];
+			 if(posizioneSuccessiva.equals("#")) return movimentoImpossibile = true;
+			 if(posizioneSuccesiva.equals("M")) gestisciScontro(player.getPosX(), player.getPosY() - 1);
+			 
+		}
+		if (movimento == 'S') {
+			if(player.getPosY() == righeMatrice)
+		}
+		if (movimento == 'D') {
+			
+		}
+
+		if (movimento == 'A') {
+			
+		}
+		
+		return movimentoImpossibile;
+	}
 	
 	public void interazionePersonaggio() {
 		
@@ -36,7 +84,32 @@ public class Mappa {
 	private void inizializzaMappa() {
 		xml = new XML(mappa);
 		mappa = xml.leggiMappa();
+		inserisciPrincipessa();
+		eliminaEspansioni();
+		
 	}
+	
+	private void inserisciPrincipessa() {
+		for(int i = 0; i < xml.getRigheMatrice(); i++) {
+			for(int j=0; j < xml.getColonneMatrice(); j++) {
+				if(mappa[i][j].equals("T")) {
+					mappa[i][j] = "K";
+				}
+			}
+		}
+	}
+	
+	
+	private void eliminaEspansioni() {
+		for(int i = 0; i < xml.getRigheMatrice(); i++) {
+			for(int j=0; j < xml.getColonneMatrice(); j++) {
+				if(mappa[i][j].equals("B") || mappa[i][j].equals("P")) {
+					mappa[i][j] = ".";
+				}
+			}
+		}
+	}
+	
 	
 	private void creaElencoMostri() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
@@ -49,14 +122,21 @@ public class Mappa {
 		}
 	}
 	
-	public void gestisciAttacco() {
+	public void gestisciScontro(int mostroX, int mostroY) {
 		do {
+			Mostro mostro;
+			for(int i = 0; i < mostriMappa.size(); i++) {
+				if(mostroX == mostriMappa.get(i).getPosX() && mostroY == mostriMappa.get(i).getPosY()) {
+					mostro = mostriMappa.get(i);
+				}
+			}
 			
-			mostro.subisciDanni(player.attacco());
 			
-			player.subisciDanni(mostro.attacco());
+			mostro.subisciDanni(player.attacca());
 			
-		}while(p.inVita() && mostro.inVita();
+			player.subisciDanni(mostro.attacca());
+			
+		}while(player.inVita() && mostro.inVita());
 		
 		
 	}
