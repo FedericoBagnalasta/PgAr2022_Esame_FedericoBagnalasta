@@ -50,6 +50,14 @@ public class Personaggio implements Entita {
 		return danno;
 	}
 	
+	public void subisciDanni(int danni) {
+		this.vita = Math.max(0,this.vita - danni);
+	}
+	
+	public boolean inVita() {
+		return this.vita>0;
+	}
+	
 	public void infoOggetti() {
 		
 	}

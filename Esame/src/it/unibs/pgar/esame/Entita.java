@@ -6,5 +6,7 @@ public interface Entita {
 	public static int difesaIniziale = 5;
 	
 	public double attacca();
+	public void subisciDanni(int danni);
+	public boolean inVita();
 
 }

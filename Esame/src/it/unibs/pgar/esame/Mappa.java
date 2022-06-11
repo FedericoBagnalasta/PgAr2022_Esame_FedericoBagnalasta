@@ -18,11 +18,20 @@ public class Mappa {
 		mappa = new int[numRighe][numColonne];
 	}
 	
+	private void inizializzaMappa() {
+		XML xml = new XML(mappa);
+		xml.leggiMappa();
+	}
+	
 	public void gestisciAttacco() {
 		do {
-			p.attacco();
-			mostro.attacco();
 			
-		}while(p.getVita()>0 && mostro.getVita()>0);
+			mostro.subisciDanni(p.attacco());
+			
+			p.subisciDanni(mostro.attacco());
+			
+		}while(p.inVita() && mostro.inVita();
+		
+		
 	}
 }
