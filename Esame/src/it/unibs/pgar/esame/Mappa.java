@@ -51,26 +51,59 @@ public class Mappa {
 	private boolean guardaOltre(char movimento) {
 		boolean movimentoImpossibile = false;
 		String posizioneSuccessiva;
+		int newPosX;
+		int newPosY;
 		
 		if (movimento == 'W') {
 			 if(player.getPosY() == 0) {
 				 return movimentoImpossibile = true;
 			 }
 			 posizioneSuccessiva = mappa[player.getPosY() - 1][player.getPosX()];
-			 if(posizioneSuccessiva.equals("#")) return movimentoImpossibile = true;
-			 if(posizioneSuccesiva.equals("M")) gestisciScontro(player.getPosX(), player.getPosY() - 1);
-			 
+			 newPosX = player.getPosX();
+			 newPosY = player.getPosY() - 1;	 
 		}
-		if (movimento == 'S') {
-			if(player.getPosY() == righeMatrice)
+		else if (movimento == 'S') {
+			if(player.getPosY() == righeMatrice - 1) {
+				return movimentoImpossibile = true;
+			}
+			posizioneSuccessiva = mappa[player.getPosY() + 1][player.getPosX()];
+			newPosX = player.getPosX();
+			newPosY = player.getPosY() + 1;
 		}
-		if (movimento == 'D') {
+		else if (movimento == 'D') {
+			if(player.getPosX() == colonneMatrice - 1) {
+				return movimentoImpossibile = true;
+			}
+			posizioneSuccessiva = mappa[player.getPosY()][player.getPosX() + 1];
+			newPosX = player.getPosX() + 1;
+			newPosY = player.getPosY();
+		}
+		else if (movimento == 'A') {
+			if(player.getPosX() == 0) {
+				return movimentoImpossibile = true;
+			}
+			posizioneSuccessiva = mappa[player.getPosY()][player.getPosX() - 1];
+			newPosX = player.getPosX() - 1;
+			newPosY = player.getPosY();
+		}
+		
+		
+		if(posizioneSuccessiva.equals("#")) return movimentoImpossibile = true;
+		if(posizioneSuccessiva.equals("M")) {
+			gestisciScontro(newPosX,newPosY);
+			player.impostaPosizione(newPosX,newPosY);
+		}
+		if(posizioneSuccessiva.equals("C")) {
+			aperturaCeste(newPosX,newPosY);
+			player.impostaPosizione(newPosX,newPosY);
+		}
+		if(posizioneSuccessiva.equals("K")) {
 			
+			player.impostaPosizione(newPosX,newPosY);
+			dichiaraVittoria();
 		}
-
-		if (movimento == 'A') {
-			
-		}
+		
+		aggiornaMappa(newPosX, newPosY);
 		
 		return movimentoImpossibile;
 	}
@@ -123,6 +156,7 @@ public class Mappa {
 	}
 	
 	public void gestisciScontro(int mostroX, int mostroY) {
+		
 		do {
 			Mostro mostro;
 			for(int i = 0; i < mostriMappa.size(); i++) {
@@ -153,6 +187,11 @@ public class Mappa {
 		String str = "dijkstra";        
 		String str2 = str.chars().mapToObj(e->(char)e).collect(Collectors.toMap(key -> new Random().nextInt(), value -> value)).values().stream().map(String::valueOf).collect(Collectors.joining());
 		return str2;
+	}
+	
+	private void aggiornaMappa(int newPosX, int newPosY) {
+		mappa[player.getPosY()][player.getPosX()] = ".";
+		mappa[newPosY][newPosX] = "O";
 	}
 	
 	public void stampaMappa() {

@@ -71,6 +71,11 @@ public class Personaggio implements Entita {
 		return this.vita>0;
 	}
 	
+	public void impostaPosizione(int posX, int posY) {
+		this.posX = posX;
+		this.posY = posY;
+	}
+	
 	public void infoOggetti() {
 		
 	}
