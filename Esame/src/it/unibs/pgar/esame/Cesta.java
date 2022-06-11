@@ -20,7 +20,9 @@ public class Cesta {
     	return contenuto;
     }
 
-
+    /*
+     * Metodo per impostare il contenuto di una cesta 
+     */
 	private void impostaContenuto() {
 		int interoEstratto = NumeriCasuali.estraiIntero(0, 99);
 		if(interoEstratto<40) {
@@ -31,8 +33,7 @@ public class Cesta {
 		}
 		else {
 			contenuto = new Pozione();
-		}
-				
+		}		
 	}
 
 	public int getPosX() {
@@ -46,8 +47,6 @@ public class Cesta {
 	public OggettoCesta getContenuto() {
 		return contenuto;
 	}
-	
-	
 	
 	
 }

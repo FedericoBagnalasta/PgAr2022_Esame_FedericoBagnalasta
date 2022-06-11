@@ -21,25 +21,11 @@ public class Main {
 		System.out.println(map.permutaMostro());
 		
 		MyMenu menu = new MyMenu(PRESENTAZIONE_OPZIONI, voci);
-		MyMenu menuInterno = new MyMenu(MENU_OPZIONI_SECONDARIE, voci2);
-		boolean permanenza = true;
+		//MyMenu menuInterno = new MyMenu(MENU_OPZIONI_SECONDARIE, voci2);
+		//boolean permanenza = true;
 		int scelta, turno = 1, sceltaInterna;
 		do {
-			do {
-				sceltaInterna = menu.scegli();
-				
-				switch(sceltaInterna) {
-				case 1: 
-					map.getPersonaggio().stampaInventario();
-					
-				case 2:
-					permanenza = false;
-				
-				case 3: 
-					return;
-				}
-				
-			}while(permanenza);
+			
 			
 			
 			
@@ -72,9 +58,32 @@ public class Main {
 			default:
 				break;
 			}
-		}while(!true);
+
+		turno++;
+		map.stampaMappa();
 		
-		map.movimentoPersonaggio();
+		
+		}while(scelta != 0);
+		
+						
+		/*do {
+				sceltaInterna = menu.scegli();
+				
+				switch(sceltaInterna) {
+				case 1: 
+					map.getPersonaggio().stampaInventario();
+					
+				case 2:
+					permanenza = false;
+				
+				case 3: 
+					return;
+				}
+				
+			}while(permanenza);*/
+		
+		
+		
 	}
 	
 

@@ -15,7 +15,7 @@ public class Mappa {
 			+ "In avanti, In dietro, A destra, A sinistra";
 	private static final String RICHIESTA_NOME = "Come vuoi chiamare il tuo eroe?";
 	private String [][] mappa;
-	private Personaggio player = creaPersonaggio();
+	private Personaggio player;
 	private ArrayList<Mostro> mostriMappa = new ArrayList<> ();
 	private ArrayList<Cesta> elencoCeste = new ArrayList<> ();
 	private XML xml;
@@ -29,9 +29,12 @@ public class Mappa {
 	
 	public Mappa() {
 		inizializzaMappa();
+		player = creaPersonaggio();
 	}
 	
-	// Guardo oltre e poi interegisco (se posso muovermi) altrimenti richiedo movmento
+	/*
+	 * Metodo per muovere il personaggio
+	 */
 	public void movimentoPersonaggio() {
 		char movimento;
 		boolean movimentoNonConsentito = false;
@@ -49,7 +52,9 @@ public class Mappa {
 	}
 	
 	
-	
+	/*
+	 * Metodo per controllare la posizione che intendo occupare con il personaggio
+	 */
 	private boolean guardaOltre(char movimento) {
 		boolean movimentoImpossibile = false;
 		String posizioneSuccessiva = null;
@@ -91,30 +96,34 @@ public class Mappa {
 		
 		
 		if(posizioneSuccessiva.equals("#")) return movimentoImpossibile = true;
-		if(posizioneSuccessiva.equals("M")) {
+		else if(posizioneSuccessiva.equals("M")) {
 			boolean mortePersonaggio = gestisciScontro(newPosX,newPosY);
+			aggiornaMappa(newPosX, newPosY);
 			if(mortePersonaggio) {
 				player.mortePersonaggio();
 			}
 			player.impostaPosizione(newPosX,newPosY);
 		}
-		if(posizioneSuccessiva.equals("C")) {
+		else if(posizioneSuccessiva.equals("C")) {
 			cestaVicina = true;
+			aggiornaMappa(newPosX, newPosY);
 			player.impostaPosizione(newPosX,newPosY);
 			
 		}
-		if(posizioneSuccessiva.equals("K")) {
-			
+		else if(posizioneSuccessiva.equals("K")) {
+			aggiornaMappa(newPosX, newPosY);
 			player.impostaPosizione(newPosX,newPosY);
 			dichiaraVittoria();
 		}
 		
-		aggiornaMappa(newPosX, newPosY);
+		
 		
 		return movimentoImpossibile;
 	}
 	
-	
+	/*
+	 * Metodo per aprire una cesta
+	 */
 	public void aperturaCesta(int posX, int posY) {
 		OggettoCesta oggetto = null;
 			for(int i = 0; i < elencoCeste.size(); i++) {
@@ -127,7 +136,9 @@ public class Mappa {
 		
 	}
 	
-	
+	/*
+	 * Metodo che viene invocato al raggiungimento della principessa Kibo
+	 */
 	public void dichiaraVittoria() {
 		System.out.println("Complimenti!\n Hai salvato la principessa Kibo");
 		stampaMappa();
@@ -136,6 +147,9 @@ public class Mappa {
 
 	
 //===========================================Metodi per la costruzione della mappa===========================================	
+	/*
+	 * Metodo per leggere le informazioni dell'xml
+	 */
 	private void inizializzaMappa() {
 		xml = new XML(mappa);
 		mappa = xml.leggiMappa();
@@ -144,6 +158,9 @@ public class Mappa {
 		
 	}
 	
+	/*
+	 * Metodo per inserire una principessa nella mappa
+	 */
 	private void inserisciPrincipessa() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
@@ -154,7 +171,9 @@ public class Mappa {
 		}
 	}
 	
-	
+	/*
+	 * Metodo per eliminare gli oggetti appartenenti ad altri moduli
+	 */
 	private void eliminaEspansioni() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
@@ -165,7 +184,9 @@ public class Mappa {
 		}
 	}
 	
-	
+	/*
+	 * Metodo per creare un elenco con tutti i mostri della mappa
+	 */
 	private void creaElencoMostri() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
@@ -177,6 +198,9 @@ public class Mappa {
 		}
 	}
 	
+	/*
+	 * Metodo per creare un elenco con tutte le ceste della mappa
+	 */
 	private void creaElencoCeste() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
@@ -187,6 +211,9 @@ public class Mappa {
 		}
 	}
 	
+	/*
+	 * Metodo per gestire lo scontro tra il personaggio e un mostro
+	 */
 	public boolean gestisciScontro(int mostroX, int mostroY) {
 		Mostro mostro = null;
 		boolean mortePersonaggio = false;
@@ -197,8 +224,6 @@ public class Mappa {
 					mostro = mostriMappa.get(i);
 				}
 			}
-			
-			
 			mostro.subisciDanni(player.attacca());
 			
 			player.subisciDanni(mostro.attacca());
@@ -212,13 +237,21 @@ public class Mappa {
 			mortePersonaggio = true;
 		}
 		return mortePersonaggio;
-		
 	}
 	
-	
+	/*
+	 * Metodo per creare il personaggio
+	 */
 	private Personaggio creaPersonaggio() {
 		String nome = InputDati.leggiStringaNonVuota(RICHIESTA_NOME);
-		return new Personaggio(nome);
+		for(int i = 0; i < xml.getRigheMatrice(); i++) {
+			for(int j=0; j < xml.getColonneMatrice(); j++) {
+				if(mappa[i][j].equals("O")){
+				return new Personaggio(nome, j, i);
+				}
+			}
+		}
+		return null;
 	}
 	
 	public boolean getCestaVicina() {
@@ -229,7 +262,6 @@ public class Mappa {
 		return player;
 	}
 	
-	
 	public int getPlayerX() {
 		return player.getPosX();
 	}
@@ -237,25 +269,31 @@ public class Mappa {
 	public int getPlayerY() {
 		return player.getPosY();
 	}
-	
-	
 
-	//Da salvare in libreria
+	/*
+	 * Metodo per permutare la stringa "dijkstra"
+	 */
 	public String permutaMostro() {
 		String str = "dijkstra";        
 		String str2 = str.chars().mapToObj(e->(char)e).collect(Collectors.toMap(key -> new Random().nextInt(), value -> value)).values().stream().map(String::valueOf).collect(Collectors.joining());
 		return str2;
 	}
 	
+	/*
+	 * Metodo per aggiornare la mappa dopo uno spostamento
+	 */
 	private void aggiornaMappa(int newPosX, int newPosY) {
 		mappa[player.getPosY()][player.getPosX()] = ".";
 		mappa[newPosY][newPosX] = "O";
 	}
 	
+	/*
+	 * Metodo per stampare la mappa
+	 */
 	public void stampaMappa() {
 		for(int i = 0; i < xml.getRigheMatrice(); i++) {
 			for(int j=0; j < xml.getColonneMatrice(); j++) {
-				System.out.printf("%s\t",  mappa[i][j]);
+				System.out.printf("%s ",  mappa[i][j]);
 			}
 			System.out.println("\n");
 		}

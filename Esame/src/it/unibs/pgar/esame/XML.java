@@ -24,23 +24,17 @@ public class XML {
 	private String elementoSalvato;
 
 	 XMLInputFactory xmlif;
-	 XMLStreamReader xmlr;
-	 
-	 
-	 
-	 
+	 XMLStreamReader xmlr; 
 	 
 	 public XML(String[][]mappa) {
 		this.mappa = mappa;
 	}
 
-
-
-
-
+	/**
+	 * Metodo per leggere la mappa contenuta nel XML
+	 * @return mappa
+	 */
 	public String[][]leggiMappa() {
-		
-		
 		
 	 try {
 	 xmlif = XMLInputFactory.newInstance();
@@ -50,12 +44,9 @@ public class XML {
 	 System.out.println(e.getMessage()); 
 	}
 	 
-	 
-	 
 	 String next = null;
-	 
 		try {
-			while (xmlr.hasNext()) { // continua a leggere finché ha eventi a disposizione switch (xmlr.getEventType()) { // switch sul tipo di evento
+			while (xmlr.hasNext()) { 
 				 switch(xmlr.getEventType()) {
 				 
 				 
@@ -64,34 +55,26 @@ public class XML {
 			 
 			 
 				 case XMLStreamConstants.START_ELEMENT:
-					 
 					//creazione mappa 
 					if (xmlr.getLocalName().equals(tag_mappa)) {
-						
 							colonneMatrice = Integer.parseInt(xmlr.getAttributeValue(0));
 							righeMatrice = Integer.parseInt(xmlr.getAttributeValue(1));
 							mappa = new String [righeMatrice][colonneMatrice];
 							Mappa.righeMatrice = righeMatrice;
 							Mappa.colonneMatrice = colonneMatrice;
 							break;
-				     }
-					 
-					 
-					 
-					 // inizio di un elemento: stampa il nome del tag e i suoi attributi
+				    }
 					else if (xmlr.getLocalName().equals(tag_riga)) {
 				    	 next = tag_riga;
-	
-				     }
+					}
 				    else if (xmlr.getLocalName().equals(tag_cella)) {
 				    	 next = tag_cella;
-				    	
-					     }
+				    }
 					break;
 			
 				     
-				 //Azioni da compiere a seconda del tag
-				 case XMLStreamConstants.CHARACTERS: // content all’interno di un elemento: stampa il testo
+				 //Lettura degli elementi
+				 case XMLStreamConstants.CHARACTERS: 
 					 if (xmlr.getText().trim().length() > 0) {
 						 if (next.equals(tag_cella)) {
 						 	elementoSalvato = xmlr.getText();
@@ -109,14 +92,7 @@ public class XML {
 				     
 			 
 			 
-				 case XMLStreamConstants.END_ELEMENT: // fine di un elemento: stampa il nome del tag chiuso
-					 
-					 //if (xmlr.getLocalName().equals(tag_cella)){
-						 
-					 //}
-					 /*mappa[riga][colonna] = elementoSalvato;
-						colonna++;*/
-					 
+				 case XMLStreamConstants.END_ELEMENT: 
 					 if (xmlr.getLocalName().equals(tag_riga) ) {
 						 riga++;
 						 colonna = 0;
@@ -125,40 +101,27 @@ public class XML {
 			 
 			 }
 				 xmlr.next();
-			 
-			 
+			  
 			 }
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	 
 	 
 	 return mappa;
 	}
-
-
-
-
+	
 
 	public int getRigheMatrice() {
 		return righeMatrice;
 	}
 
 
-
-
-
 	public int getColonneMatrice() {
 		return colonneMatrice;
 	}
 	 
-	
-	
-	
 	 
 }
